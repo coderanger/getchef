@@ -2,4 +2,5 @@ Flask==0.9
 Flask-Bootstrap==2.1.0-1
 Werkzeug==0.8.3
 distribute==0.6.28
+gunicorn==0.14.6
 requests==0.14.0
