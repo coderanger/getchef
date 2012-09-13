@@ -1,0 +1,48 @@
+@import "compass/utilities/general/clearfix";
+
+$platforms-layout: smart;
+@import 'platforms/*.png';
+
+.navbar .brand .logo {
+  margin: -4px 4px 0 0;
+}
+
+#platforms {
+  overflow: hidden;
+
+  .platform {
+    display: block;
+    float: left;
+    margin-right: 15px;
+  }
+
+  .logo {
+    width: 150px;
+    height: 150px;
+  }
+
+  @each $platform in auto, debian, ubuntu, el, solaris, osx, windows {
+    .#{$platform} .logo { @include platforms-sprite($platform); }
+    .#{$platform}.active .logo, .#{$platform}:hover .logo { @include platforms-sprite($platform + _dark); }
+  }
+
+  .name {
+    color: #969696;
+    text-align: center
+  }
+
+  .active .name, :hover .name {
+    color: #333;
+  }
+}
+
+#versions {
+  margin-top: 20px;
+  text-align: center;
+}
+
+#instructions {
+  margin-top: 20px;
+  @include clearfix;
+  .download { float: right; }
+}

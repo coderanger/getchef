@@ -1,0 +1,107 @@
+/* line 107, platforms */
+.platforms-sprite, #platforms .auto .logo, #platforms .auto.active .logo, #platforms .auto:hover .logo, #platforms .debian .logo, #platforms .debian.active .logo, #platforms .debian:hover .logo, #platforms .ubuntu .logo, #platforms .ubuntu.active .logo, #platforms .ubuntu:hover .logo, #platforms .el .logo, #platforms .el.active .logo, #platforms .el:hover .logo, #platforms .solaris .logo, #platforms .solaris.active .logo, #platforms .solaris:hover .logo, #platforms .osx .logo, #platforms .osx.active .logo, #platforms .osx:hover .logo, #platforms .windows .logo, #platforms .windows.active .logo, #platforms .windows:hover .logo {
+  background: url('/static/platforms-s1af0d9ec71.png') no-repeat;
+}
+
+/* line 6, main.scss */
+.navbar .brand .logo {
+  margin: -4px 4px 0 0;
+}
+
+/* line 10, main.scss */
+#platforms {
+  overflow: hidden;
+}
+/* line 13, main.scss */
+#platforms .platform {
+  display: block;
+  float: left;
+  margin-right: 15px;
+}
+/* line 19, main.scss */
+#platforms .logo {
+  width: 150px;
+  height: 150px;
+}
+/* line 25, main.scss */
+#platforms .auto .logo {
+  background-position: 0 0;
+}
+/* line 26, main.scss */
+#platforms .auto.active .logo, #platforms .auto:hover .logo {
+  background-position: 0 -150px;
+}
+/* line 25, main.scss */
+#platforms .debian .logo {
+  background-position: 0 -300px;
+}
+/* line 26, main.scss */
+#platforms .debian.active .logo, #platforms .debian:hover .logo {
+  background-position: 0 -450px;
+}
+/* line 25, main.scss */
+#platforms .ubuntu .logo {
+  background-position: 0 -1500px;
+}
+/* line 26, main.scss */
+#platforms .ubuntu.active .logo, #platforms .ubuntu:hover .logo {
+  background-position: 0 -1650px;
+}
+/* line 25, main.scss */
+#platforms .el .logo {
+  background-position: 0 -600px;
+}
+/* line 26, main.scss */
+#platforms .el.active .logo, #platforms .el:hover .logo {
+  background-position: 0 -750px;
+}
+/* line 25, main.scss */
+#platforms .solaris .logo {
+  background-position: 0 -1200px;
+}
+/* line 26, main.scss */
+#platforms .solaris.active .logo, #platforms .solaris:hover .logo {
+  background-position: 0 -1350px;
+}
+/* line 25, main.scss */
+#platforms .osx .logo {
+  background-position: 0 -900px;
+}
+/* line 26, main.scss */
+#platforms .osx.active .logo, #platforms .osx:hover .logo {
+  background-position: 0 -1050px;
+}
+/* line 25, main.scss */
+#platforms .windows .logo {
+  background-position: 0 -1800px;
+}
+/* line 26, main.scss */
+#platforms .windows.active .logo, #platforms .windows:hover .logo {
+  background-position: 0 -1950px;
+}
+/* line 29, main.scss */
+#platforms .name {
+  color: #969696;
+  text-align: center;
+}
+/* line 34, main.scss */
+#platforms .active .name, #platforms :hover .name {
+  color: #333;
+}
+
+/* line 39, main.scss */
+#versions {
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* line 44, main.scss */
+#instructions {
+  margin-top: 20px;
+  overflow: hidden;
+  *zoom: 1;
+}
+/* line 47, main.scss */
+#instructions .download {
+  float: right;
+}
