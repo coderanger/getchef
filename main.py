@@ -47,7 +47,7 @@ def render(platform, version, arch, chef_version):
         for ver, ver_data in sorted(raw_versions.iteritems(), key=lambda v: pkg_resources.parse_version(v[0])):
             for ar in sorted(ver_data.iterkeys(), key=lambda a: arch_ranking.index(a), reverse=True):
                 versions.append((ver, ar))
-    download_url = 'http://opscode-omnitruck-release.s3.amazonaws.com/%s'%chef_package_info(platform, version, arch, chef_version)
+    download_url = 'http://opscode-omnibus-packages.s3.amazonaws.com/%s'%chef_package_info(platform, version, arch, chef_version)
     return render_template('main.html', version_info=chef_package_info(), 
                                         platforms=platforms,
                                         raw_platform=platform,
