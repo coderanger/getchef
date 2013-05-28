@@ -20,7 +20,7 @@ def dropdb():
         db.drop_all()
 
 @manager.command
-def omnitruck_sync():
+def omnitruck():
     Package.load_all_omnitruck()
 
 if __name__ == '__main__':

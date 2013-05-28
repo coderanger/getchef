@@ -21,8 +21,8 @@
   <div class="container">
     <h1>Everything you need to get started with Chef</h1>
     <div id="platforms">
-      {% for plat, label in all_platforms %}
-      <a class="platform {{ plat }}{% if platform == plat %} active{% endif %}" href="/{{ plat }}/">
+      {% for plat, label, url in platforms %}
+      <a class="platform {{ plat }}{% if platform == plat %} active{% endif %}" href="{{ url }}">
         <div class="logo"></div>
         <div class="name">{{ label }}</div>
       </a>

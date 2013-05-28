@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import itertools
 import os
 
 import pkg_resources
 import requests
-import flask
 from flask import Flask, render_template
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -23,15 +21,17 @@ db = SQLAlchemy(app)
 cache = SimpleCache()
 
 # Because I want a certain order and because adding new ones will take some actual work
-all_platforms = [
-    ('auto', 'Automatic'),
-    ('ubuntu', 'Ubuntu'),
-    ('el', 'Red Hat/Fedora'),
-    ('debian', 'Debian'),
-    ('solaris', 'Solaris'),
-    ('osx', 'Mac OS X'),
-    ('windows', 'Windows')
-]
+platform_labels = {
+    'auto': 'Automatic',
+    'ubuntu': 'Ubuntu',
+    'el': 'Red Hat/Fedora',
+    'debian': 'Debian',
+    'solaris': 'Solaris',
+    'osx': 'Mac OS X',
+    'windows': 'Windows',
+}
+all_platforms = ['auto', 'ubuntu', 'el', 'debian', 'solaris', 'osx', 'windows']
+server_platforms = ['ubuntu', 'el']
 platform_aliases = {'solaris2': 'solaris', 'mac_os_x': 'osx'}
 arch_ranking = ['x86_64', 'i686', 'i386', 'sparc']
 arch_ranking.reverse()
@@ -43,9 +43,9 @@ class Package(db.Model):
     arch = db.Column(db.String(255))
     chef_version = db.Column(db.String(255))
     raw_path = db.Column(db.String(255))
-    is_client = db.Column(db.Boolean)
-    is_server = db.Column(db.Boolean)
-    is_uploaded = db.Column(db.Boolean)
+    is_client = db.Column(db.Boolean, nullable=False, default=False)
+    is_server = db.Column(db.Boolean, nullable=False, default=False)
+    is_uploaded = db.Column(db.Boolean, nullable=False, default=False)
 
     def __init__(self, **kwargs):
         for key, value in kwargs.iteritems():
@@ -89,23 +89,26 @@ class Package(db.Model):
         cls.load_omnitruck(requests.get('http://www.opscode.com/chef/full_list').json(), False)
         cls.load_omnitruck(requests.get('http://www.opscode.com/chef/full_server_list').json(), True)
 
-def chef_package_info(*args):
-    rv = getattr(flask.g, 'chef_package_info', None)
-    if rv is None:
-        rv = flask.g.chef_package_info = requests.get('http://www.opscode.com/chef/full_list').json
-    if args:
-        # Make nicer URLs by hiding the internal names
-        args = (platform_aliases.get(args[0], args[0]),) + args[1:]
-        rv = reduce(lambda v, key: v.get(key, {}), args, rv)
-    return rv
+def get_platforms(server):
+    platforms = server_platforms if server else all_platforms
+    for platform in platforms:
+        yield platform, platform_labels[platform], '/%s%s/'%('server/' if server else '', platform)
+
+@app.route('/server/')
+@app.route('/server/<platform>/')
+@app.route('/server/<platform>/<version>/')
+@app.route('/server/<platform>/<version>/<arch>/')
+@app.route('/server/<platform>/<platform_version>/<arch>/<chef_version>/')
+def render_server(platform='ubuntu', platform_version=None, arch=None, chef_version=None):
+    return render(platform, platform_version, arch, chef_version, server=True)
 
 @app.route('/')
 @app.route('/<platform>/')
 @app.route('/<platform>/<version>/')
 @app.route('/<platform>/<version>/<arch>/')
 @app.route('/<platform>/<platform_version>/<arch>/<chef_version>/')
-def render(platform='auto', platform_version=None, arch=None, chef_version=None):
-    params = {'platform': platform}
+def render(platform='auto', platform_version=None, arch=None, chef_version=None, server=False):
+    params = {'platform': platform, 'is_server': server}
     if platform_version:
         params['platform_version'] = platform_version
     if arch:
@@ -114,7 +117,7 @@ def render(platform='auto', platform_version=None, arch=None, chef_version=None)
         params['chef_version'] = chef_version
     packages = list(Package.query.filter_by(**params))
     platform_version_archs = sorted(
-        db.engine.execute('SELECT DISTINCT platform_version, arch FROM package WHERE platform = :platform', platform=platform),
+        db.engine.execute('SELECT DISTINCT platform_version, arch FROM package WHERE platform = :platform AND is_server = :is_server', platform=platform, is_server=server),
         reverse=True,
         key=lambda (ver, ar): (pkg_resources.parse_version(ver), arch_ranking.index(ar))
     )
@@ -129,6 +132,7 @@ def render(platform='auto', platform_version=None, arch=None, chef_version=None)
         chef_version = chef_versions[0]
     return render_template('main.html', packages=packages,
                                         all_platforms=all_platforms,
+                                        platforms=get_platforms(server),
                                         platform=platform,
                                         platform_version=platform_version,
                                         arch=arch,
