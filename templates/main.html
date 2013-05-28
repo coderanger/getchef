@@ -23,17 +23,11 @@
   </div>
 
   <div id="instructions" class="well well-large">
-    {% if raw_platform == 'auto' %}
-    Open a root shell on the target system and run the following command to download and install the latest version of the Chef client:
-    <pre>curl -L http://www.opscode.com/chef/install.sh | bash</pre>
-    {% elif raw_platform == 'windows' %}
-    <a class="download btn btn-large btn-primary" href="http://www.opscode.com/chef/install.msi">Download Chef</a>
-    Download the installer from the link and run it to install the latest version of the Chef client.
-    {% else %}
+    {% block instructions %}
     <a class="download btn btn-large btn-primary" href="{{ download_url }}">Download Chef {{ chef_version }}</a>
     You can also install manually by downloading the package below after you
     have selected a Chef version. For more information about manual
     installation, please <a href="http://wiki.opscode.com/display/chef/Installation">read the wiki</a>.
-    {% endif %}
+    {% endblock %}
   </div>
 {% endblock %}

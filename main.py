@@ -137,17 +137,18 @@ def render(platform, platform_version=None, arch=None, chef_version=None, server
         chef_version = chef_versions[0]
     platform_versions = OrderedSet(ver for ver, ar in platform_version_archs if ar == arch)
     archs = OrderedSet(ar for ver, ar in platform_version_archs if ver == platform_version)
-    return render_template('main.html', packages=packages,
-                                        all_platforms=all_platforms,
-                                        platforms=get_platforms(server),
-                                        platform=platform,
-                                        platform_version=platform_version,
-                                        arch=arch,
-                                        platform_versions=platform_versions,
-                                        archs=archs,
-                                        platform_version_archs=platform_version_archs,
-                                        chef_versions=chef_versions,
-                                        server=server)
+    return render_template(['%s.html'%platform, 'main.html'],
+        packages=packages,
+        all_platforms=all_platforms,
+        platforms=get_platforms(server),
+        platform=platform,
+        platform_version=platform_version,
+        arch=arch,
+        platform_versions=platform_versions,
+        archs=archs,
+        platform_version_archs=platform_version_archs,
+        chef_versions=chef_versions,
+        server=server)
 
 if __name__ == '__main__':
     app.run(debug=True)
