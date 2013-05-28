@@ -5,7 +5,7 @@ import os
 
 import pkg_resources
 import requests
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.sqlalchemy import SQLAlchemy
 from werkzeug.contrib.cache import SimpleCache
@@ -96,8 +96,8 @@ def get_platforms(server=False):
 
 @app.route('/server/')
 @app.route('/server/<platform>/')
-@app.route('/server/<platform>/<version>/')
-@app.route('/server/<platform>/<version>/<arch>/')
+@app.route('/server/<platform>/<platform_version>/')
+@app.route('/server/<platform>/<platform_version>/<arch>/')
 @app.route('/server/<platform>/<platform_version>/<arch>/<chef_version>/')
 def render_server(platform='ubuntu', platform_version=None, arch=None, chef_version=None):
     return render(platform, platform_version, arch, chef_version, server=True)
@@ -109,8 +109,8 @@ def render_auto():
 
 
 @app.route('/<platform>/')
-@app.route('/<platform>/<version>/')
-@app.route('/<platform>/<version>/<arch>/')
+@app.route('/<platform>/<platform_version>/')
+@app.route('/<platform>/<platform_version>/<arch>/')
 @app.route('/<platform>/<platform_version>/<arch>/<chef_version>/')
 def render(platform, platform_version=None, arch=None, chef_version=None, server=False):
     params = {'platform': platform, 'is_server': server}
@@ -121,20 +121,22 @@ def render(platform, platform_version=None, arch=None, chef_version=None, server
     if chef_version:
         params['chef_version'] = chef_version
     packages = list(Package.query.filter_by(**params))
+    if not packages:
+        return render_template('404.html', platform=platform, platforms=get_platforms(server))
     platform_version_archs = sorted(
-        db.engine.execute('SELECT DISTINCT platform_version, arch FROM package WHERE platform = :platform AND is_server = :is_server', platform=platform, is_server=server),
+        db.engine.execute('SELECT DISTINCT platform_version, arch FROM package WHERE platform = :platform AND is_server = :is_server', platform, server),
         reverse=True,
         key=lambda (ver, ar): (pkg_resources.parse_version(ver), arch_ranking.index(ar))
     )
-    platform_versions = OrderedSet(ver for ver, ar in platform_version_archs)
-    archs = OrderedSet(ar for ver, ar in platform_version_archs)
     chef_versions = sorted(set(pkg.chef_version for pkg in packages), reverse=True, key=pkg_resources.parse_version)
     if not platform_version:
-        platform_version = iter(platform_versions).next()
+        platform_version = iter(platform_version_archs).next()[0]
     if not arch:
-        arch = iter(archs).next()
+        arch = iter(platform_version_archs).next()[1]
     if not chef_version:
         chef_version = chef_versions[0]
+    platform_versions = OrderedSet(ver for ver, ar in platform_version_archs if ar == arch)
+    archs = OrderedSet(ar for ver, ar in platform_version_archs if ver == platform_version)
     return render_template('main.html', packages=packages,
                                         all_platforms=all_platforms,
                                         platforms=get_platforms(server),

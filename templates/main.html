@@ -2,21 +2,17 @@
 
 {% block content %}
   <div id="versions-container">
-    {% if platform_version_archs|length > 5 or platform_versions|length == 1 or archs|length == 1 %}
-    {% if platform_versions|length > 1 %}
+    {% if platform_version_archs|length > 5 or platform_versions|length <= 1 or archs|length <= 1 %}
     <div id="versions" class="btn-group">
       {% for ver in platform_versions %}
-      <a href="/{{ platform }}/{{ ver }}/{{ arch }}/" class="btn{% if ver == platform_version %} btn-primary active{% endif %}">{{ ver }}</a>
+      <a href="/{{ platform }}/{{ ver }}/{{ arch }}/" class="btn{% if ver == platform_version %} btn-primary active{% endif %}{% if platform_versions|length == 1 %} disabled{% endif %}">{{ ver }}</a>
       {% endfor %}
     </div>
-    {% endif %}
-    {% if archs|length > 1 %}
     <div id="archs" class="btn-group">
       {% for ar in archs %}
-      <a href="/{{ platform }}/{{ platform_version }}/{{ ar }}/" class="btn{% if ar == arch %} btn-primary active{% endif %}">{{ ar }}</a>
+      <a href="/{{ platform }}/{{ platform_version }}/{{ ar }}/" class="btn{% if ar == arch %} btn-primary active{% endif %}{% if archs|length == 1 %} disabled{% endif %}">{{ ar }}</a>
       {% endfor %}
     </div>
-    {% endif %}
     {% else %}
     <div id="version-archs" class="btn-group">
       {% for ver, ar in platform_version_archs %}
