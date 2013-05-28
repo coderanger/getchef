@@ -134,7 +134,12 @@ def render(platform, platform_version=None, arch=None, chef_version=None, server
     if not arch:
         arch = iter(platform_version_archs).next()[1]
     if not chef_version:
-        chef_version = chef_versions[0]
+        for version in chef_versions:
+            if 'alpha' not in version and 'beta' not in version and 'rc' not in version:
+                chef_version = version
+                break
+        else:
+            chef_version = chef_versions[0]
     platform_versions = OrderedSet(ver for ver, ar in platform_version_archs if ar == arch)
     archs = OrderedSet(ar for ver, ar in platform_version_archs if ver == platform_version)
     return render_template(['%s.html'%platform, 'main.html'],
@@ -144,6 +149,7 @@ def render(platform, platform_version=None, arch=None, chef_version=None, server
         platform=platform,
         platform_version=platform_version,
         arch=arch,
+        chef_version=chef_version,
         platform_versions=platform_versions,
         archs=archs,
         platform_version_archs=platform_version_archs,
