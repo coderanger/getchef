@@ -1,0 +1,38 @@
+{% extends "bootstrap_base.html" %}
+
+{% block style %}
+{{ super() }}
+<link href="/static/main.css" rel="stylesheet">
+{% endblock %}
+
+{% block body_content %}
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="brand" href="/"><img class="logo" src="/static/logo.png" />Chef</a>
+         <ul class="nav">
+          <li{% if not server %} class="active"{% endif %}><a href="/">Chef Client</a></li>
+          <li{% if server %} class="active"{% endif %}><a href="/server/">Chef Server</a></li>
+        </ul>
+        <ul class="nav pull-right">
+          <li><a href="http://www.opscode.com/hosted-chef/">Sign Up</a></li>
+          <li><a href="http://www.opscode.com/support/">Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1>Everything you need to get started with Chef</h1>
+    <div id="platforms">
+      {% for plat, label, url in platforms %}
+      <a class="platform {{ plat }}{% if platform == plat %} active{% endif %}" href="{{ url }}">
+        <div class="logo"></div>
+        <div class="name">{{ label }}</div>
+      </a>
+      {% endfor %}
+    </div>
+
+    {% block content %}{% endblock %}
+  </div>
+{% endblock %}

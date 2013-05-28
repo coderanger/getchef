@@ -90,18 +90,22 @@
 }
 
 /* line 39, main.scss */
-#versions {
-  margin-top: 20px;
+#versions-container {
   text-align: center;
 }
 
-/* line 44, main.scss */
+/* line 43, main.scss */
+#versions, #archs, #version-archs {
+  margin-top: 20px;
+}
+
+/* line 47, main.scss */
 #instructions {
   margin-top: 20px;
   overflow: hidden;
   *zoom: 1;
 }
-/* line 47, main.scss */
+/* line 50, main.scss */
 #instructions .download {
   float: right;
 }

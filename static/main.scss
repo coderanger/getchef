@@ -36,9 +36,12 @@ $platforms-layout: smart;
   }
 }
 
-#versions {
-  margin-top: 20px;
+#versions-container {
   text-align: center;
+}
+
+#versions, #archs, #version-archs {
+  margin-top: 20px;
 }
 
 #instructions {

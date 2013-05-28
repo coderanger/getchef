@@ -89,7 +89,7 @@ class Package(db.Model):
         cls.load_omnitruck(requests.get('http://www.opscode.com/chef/full_list').json(), False)
         cls.load_omnitruck(requests.get('http://www.opscode.com/chef/full_server_list').json(), True)
 
-def get_platforms(server):
+def get_platforms(server=False):
     platforms = server_platforms if server else all_platforms
     for platform in platforms:
         yield platform, platform_labels[platform], '/%s%s/'%('server/' if server else '', platform)
@@ -103,11 +103,16 @@ def render_server(platform='ubuntu', platform_version=None, arch=None, chef_vers
     return render(platform, platform_version, arch, chef_version, server=True)
 
 @app.route('/')
+@app.route('/auto/')
+def render_auto():
+    return render_template('auto.html', platform='auto', platforms=get_platforms())
+
+
 @app.route('/<platform>/')
 @app.route('/<platform>/<version>/')
 @app.route('/<platform>/<version>/<arch>/')
 @app.route('/<platform>/<platform_version>/<arch>/<chef_version>/')
-def render(platform='auto', platform_version=None, arch=None, chef_version=None, server=False):
+def render(platform, platform_version=None, arch=None, chef_version=None, server=False):
     params = {'platform': platform, 'is_server': server}
     if platform_version:
         params['platform_version'] = platform_version
@@ -139,7 +144,8 @@ def render(platform='auto', platform_version=None, arch=None, chef_version=None,
                                         platform_versions=platform_versions,
                                         archs=archs,
                                         platform_version_archs=platform_version_archs,
-                                        chef_versions=chef_versions)
+                                        chef_versions=chef_versions,
+                                        server=server)
 
 if __name__ == '__main__':
     app.run(debug=True)
