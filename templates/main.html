@@ -21,18 +21,33 @@
   <div class="container">
     <h1>Everything you need to get started with Chef</h1>
     <div id="platforms">
-      {% for plat, label in platforms %}
-      <a class="platform {{ plat }}{% if raw_platform == plat %} active{% endif %}" href="/{{ plat }}/">
+      {% for plat, label in all_platforms %}
+      <a class="platform {{ plat }}{% if platform == plat %} active{% endif %}" href="/{{ plat }}/">
         <div class="logo"></div>
         <div class="name">{{ label }}</div>
       </a>
       {% endfor %}
     </div>
 
-    {% if versions %}
+    {% if platform_version_archs|length > 5 or platform_versions|length == 1 or archs|length == 1 %}
+    {% if platform_versions|length > 1 %}
     <div id="versions" class="btn-group">
-      {% for ver, ar in versions %}
-      <a href="/{{ raw_platform }}/{{ ver }}/{{ ar }}/" class="btn{% if ver == version and ar == arch %} btn-primary active{% endif %}">{{ ver }} {{ ar }}</a>
+      {% for ver in platform_versions %}
+      <a href="/{{ platform }}/{{ ver }}/{{ arch }}/" class="btn{% if ver == platform_version %} btn-primary active{% endif %}">{{ ver }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% if archs|length > 1 %}
+    <div id="archs" class="btn-group">
+      {% for ar in archs %}
+      <a href="/{{ platform }}/{{ platform_version }}/{{ ar }}/" class="btn{% if ar == arch %} btn-primary active{% endif %}">{{ ar }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% else %}
+    <div id="version-archs" class="btn-group">
+      {% for ver, ar in platform_version_archs %}
+      <a href="/{{ platform }}/{{ ver }}/{{ ar }}/" class="btn{% if ver == platform_version and ar == arch %} btn-primary active{% endif %}">{{ ver }} {{ ar }}</a>
       {% endfor %}
     </div>
     {% endif %}

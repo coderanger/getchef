@@ -1,6 +1,6 @@
-/* line 107, platforms */
+/* line 146, platforms/*.png */
 .platforms-sprite, #platforms .auto .logo, #platforms .auto.active .logo, #platforms .auto:hover .logo, #platforms .debian .logo, #platforms .debian.active .logo, #platforms .debian:hover .logo, #platforms .ubuntu .logo, #platforms .ubuntu.active .logo, #platforms .ubuntu:hover .logo, #platforms .el .logo, #platforms .el.active .logo, #platforms .el:hover .logo, #platforms .solaris .logo, #platforms .solaris.active .logo, #platforms .solaris:hover .logo, #platforms .osx .logo, #platforms .osx.active .logo, #platforms .osx:hover .logo, #platforms .windows .logo, #platforms .windows.active .logo, #platforms .windows:hover .logo {
-  background: url('/static/platforms-s1af0d9ec71.png') no-repeat;
+  background: url('/static/platforms-scd1b2c4fb9.png') no-repeat;
 }
 
 /* line 6, main.scss */
