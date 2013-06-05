@@ -1,7 +1,6 @@
 import posixpath
 from cStringIO import StringIO
 
-import depot
 import requests
 from flask.ext.script import Manager, Server, prompt_bool
 
@@ -48,6 +47,7 @@ def omnitruck():
 
 @manager.command
 def packages():
+    import depot
     storage = depot.StorageWrapper('s3://apt.getchef.org')
     for platform in APT_PLATFORMS:
         for pkg in Package.query.filter_by(platform=platform, is_uploaded=False):

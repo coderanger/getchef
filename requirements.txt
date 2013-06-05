@@ -8,7 +8,6 @@ SQLAlchemy==0.8.1
 Werkzeug==0.8.3
 apache-libcloud==0.12.4
 arpy==1.0.0
--e git+git@github.com:coderanger/depot.git@a4eb182b0ccf3ba8b0a8876e06c2e3922ec86b3a#egg=depot-dev
 docopt==0.6.1
 gunicorn==0.17.4
 ipython==0.13.2
