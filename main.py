@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import re
 import os
 
 import pkg_resources
@@ -47,6 +48,8 @@ class Package(db.Model):
     is_server = db.Column(db.Boolean, nullable=False, default=False)
     is_uploaded = db.Column(db.Boolean, nullable=False, default=False)
 
+    PRERELASE_VERSION = re.compile(r'alpha|beta|rc|\+')
+
     def __init__(self, **kwargs):
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
@@ -55,8 +58,13 @@ class Package(db.Model):
     def __repr__(self):
         return '<Package %r>' % self.raw_path
 
+    @property
     def opscode_url(self):
         return 'https://s3.amazonaws.com/opscode-omnibus-packages'+self.raw_path
+
+    @property
+    def is_prerelease(self):
+        return not not self.PRERELASE_VERSION.search(self.chef_version)
 
     @staticmethod
     def walk_omnitruck(omnitruck_data):
@@ -140,6 +148,15 @@ def render(platform, platform_version=None, arch=None, chef_version=None, server
                 break
         else:
             chef_version = chef_versions[0]
+    for pkg in packages:
+        if pkg.platform == platform and \
+           pkg.platform_version == platform_version and \
+           pkg.arch == arch and \
+           pkg.chef_version == chef_version:
+            current_package = pkg
+            break
+    else:
+        current_package = packages[0]
     platform_versions = OrderedSet(ver for ver, ar in platform_version_archs if ar == arch)
     archs = OrderedSet(ar for ver, ar in platform_version_archs if ver == platform_version)
     return render_template(['%s.html'%platform, 'main.html'],
@@ -154,6 +171,7 @@ def render(platform, platform_version=None, arch=None, chef_version=None, server
         archs=archs,
         platform_version_archs=platform_version_archs,
         chef_versions=chef_versions,
+        current_package=current_package,
         server=server)
 
 if __name__ == '__main__':

@@ -24,7 +24,7 @@
 
   <div id="instructions" class="well well-large">
     {% block instructions %}
-    <a class="download btn btn-large btn-primary" href="{{ download_url }}">Download Chef {{ chef_version }}</a>
+    <a class="download btn btn-large btn-primary" href="{{ current_package.opscode_url }}">Download Chef {{ current_package.chef_version }}</a>
     You can also install manually by downloading the package below after you
     have selected a Chef version. For more information about manual
     installation, please <a href="http://wiki.opscode.com/display/chef/Installation">read the wiki</a>.
