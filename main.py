@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import logging
 import re
 import os
 
@@ -20,6 +21,11 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:/
 
 db = SQLAlchemy(app)
 cache = SimpleCache()
+
+if not app.debug:
+    handler = logging.StreamHandler()
+    handler.setLevel(logging.WARNING)
+    app.logger.addHandler(handler)
 
 # Because I want a certain order and because adding new ones will take some actual work
 platform_labels = {
