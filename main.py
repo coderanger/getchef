@@ -138,7 +138,7 @@ def render(platform, platform_version=None, arch=None, chef_version=None, server
     if not packages:
         return render_template('404.html', platform=platform, platforms=get_platforms(server))
     platform_version_archs = sorted(
-        db.engine.execute('SELECT DISTINCT platform_version, arch FROM package WHERE platform = ? AND is_server = ?', (platform, server)),
+        db.engine.execute('SELECT DISTINCT platform_version, arch FROM package WHERE platform = %s AND is_server = %s', (platform, server)),
         reverse=True,
         key=lambda (ver, ar): (pkg_resources.parse_version(ver), arch_ranking.index(ar))
     )
